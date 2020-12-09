@@ -6,7 +6,7 @@ var app =express();
 const todoApi= require('./routes/todoApi');
 const usersApi = require('./routes/userApi')
 require('./db/mogoDB')
-
+require("nodemailer");
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());

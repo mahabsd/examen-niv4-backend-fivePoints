@@ -17,7 +17,7 @@ router.post('/user/add/', (req, res) => {
 
 //get by Id
 router.get('/user/:id', (req, res) => {
-    User.findById(req.params.id).then(data => {
+    User.findById(req.params.id).populate('todos').exec().then(data => {
         res.status(200).json(data);
         res.send(data);
     }).catch(err => res.status(400).json('Error: ' + err));
@@ -45,7 +45,7 @@ router.put('/user/update/:id', (req, res) => {
 });
 //get All users
 router.get('/getAllusers', (req, res) => {
-    User.find().then(function (users) {
+    User.find().populate('todos').exec().then(function (users) {
         res.send(users)
         res.status(200).json();
     }).catch(err => res.status(400).json('Error: ' + err));
