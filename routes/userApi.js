@@ -5,10 +5,14 @@ const User = require("../models/user")
 //add new user
 router.post('/user/add/', (req, res) => {
     var user = new User(req.body);
-    user.save();
-    User.findById
-    console.log(user);
-    res.json(user);
+
+    user.save().then(function (){
+        res.json(user);
+        res.status(200).json();
+        User.findById
+        console.log(user);
+    }).catch(err => res.status(400).json('Error: ' + err));
+
 });
 
 //get by Id
