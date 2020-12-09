@@ -1,12 +1,15 @@
-
 const mongoose = require('mongoose');
 var schema = mongoose.Schema;
 
 
 var todoSchema = new schema({
-name : {type : String},
-lastname : {type : String},
-age : {type : Number}
+    title: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+
 })
 
 module.exports = mongoose.model("todoSchema", todoSchema)
