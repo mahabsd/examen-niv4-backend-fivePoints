@@ -16,7 +16,7 @@ app.use('/todos', todoApi);
 app.use('/users', usersApi);
 app.use('/emails', mailApi);
 app.use('/multers', multerApi);
-
+app.use('/img', express.static('img'));
 
 app.listen(port,hostname, ()=>{
     console.log("server is running at http://"+hostname+":"+port);

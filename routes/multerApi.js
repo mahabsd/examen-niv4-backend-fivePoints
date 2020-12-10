@@ -24,13 +24,18 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 //Upload route
 router.post('/upload/:idUser', upload.single('image'), (req, res, next) => {
-    try {
-        return res.status(201).json({
-            message: 'File uploded successfully'
-        });
-    } catch (error) {
-        console.error(error);
-    }
+    User.findByIdAndUpdate(req.params.idUser, {image : req.file.path} ).then(data => {
+        res.send(data);
+    })
+    // try {
+    //     console.log(req.file.path);
+    //     return res.status(201).json({
+    //         message: 'File uploded successfully '+req.file.filename
+
+    //     });
+    // } catch (error) {
+    //     console.error(error);
+    // }
 });
 
 module.exports = router;
