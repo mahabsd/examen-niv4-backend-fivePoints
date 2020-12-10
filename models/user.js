@@ -4,7 +4,8 @@ var schema = mongoose.Schema;
 var userSchema = new schema({
     email : {type : String},
     password : {type : String},
-    todos :   [{ type: mongoose.Schema.Types.ObjectId, ref: 'todoSchema' }]
+    todos :   [{ type: mongoose.Schema.Types.ObjectId, ref: 'todoSchema' }],
+    image : {type : String}
 });
 
 module.exports = mongoose.model("user", userSchema)
