@@ -10,8 +10,8 @@ var transporter = nodemailer.createTransport("SMTP", {
     secure: true,
     service: "Gmail",
     auth: {
-       user: 'mahabsd@gmail.com',
-       pass: 'Mahmouhaa'
+       user: 'mail',
+       pass: 'pass'
     }
 });
 
@@ -19,8 +19,8 @@ var transporter = nodemailer.createTransport("SMTP", {
     router.post('/send', function(req, res){  
         // setup e-mail data with unicode symbols
         var mailOptions = {
-            from: 'mahabsd@gmail.com',
-            to: 'mahabsd@gmail.com',
+            from: 'mail',
+            to: 'receiver',
             subject: req.body.subject, // Subject line
             text: req.body.text, // plaintext body
             // html: '<b>Hello world 🐴</b>' // html body
