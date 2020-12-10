@@ -6,12 +6,15 @@ var app =express();
 const todoApi= require('./routes/todoApi');
 const usersApi = require('./routes/userApi')
 require('./db/mogoDB')
-require("nodemailer");
+const nodemailer = require("nodemailer");
+const mailApi = require("./routes/nodemailer")
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use('/todos', todoApi);
 app.use('/users', usersApi);
+app.use('/emails', mailApi);
+
 
 app.listen(port,hostname, ()=>{
     console.log("server is running at http://"+hostname+":"+port);
