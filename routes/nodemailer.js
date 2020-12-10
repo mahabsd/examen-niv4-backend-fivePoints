@@ -30,6 +30,6 @@ var transporter = nodemailer.createTransport("SMTP", {
                 return res.send(error);
             }
             return res.send("mail send successfully");
-        }); 
+        });
     })
 module.exports = router;
