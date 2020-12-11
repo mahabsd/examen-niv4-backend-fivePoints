@@ -22,20 +22,25 @@ const fileFilter = (req, file, cb) => {
 }
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-//Upload route
+//Upload single image and add it to a user
 router.post('/upload/:idUser', upload.single('image'), (req, res, next) => {
     User.findByIdAndUpdate(req.params.idUser, {image : req.file.path} ).then(data => {
         res.send(data);
     })
-    // try {
-    //     console.log(req.file.path);
-    //     return res.status(201).json({
-    //         message: 'File uploded successfully '+req.file.filename
-
-    //     });
-    // } catch (error) {
-    //     console.error(error);
-    // }
 });
 
+//upload multiple images
+router.post('/uploadmultiple/', upload.array('image', 100), (req, res, next) => {
+    // User.findByIdAndUpdate(req.params.idUser, {image : req.file.path} ).then(data => {
+    //     res.send(data);
+    // })
+    try {
+        return res.status(201).json({
+            message: 'Files uploded successfully '
+
+        });
+    } catch (error) {
+        console.error(error);
+    }
+});
 module.exports = router;
