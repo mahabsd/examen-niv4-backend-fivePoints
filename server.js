@@ -4,7 +4,7 @@ const hostname = "127.0.0.1";
 const port = 3000;
 var app =express();
 require('./db/mogoDB')
-require('./routes/scheduledemailsApi')
+//require('./routes/scheduledemailsApi')
 const todoApi= require('./routes/todoApi');
 const usersApi = require('./routes/userApi')
 const mailApi = require("./routes/nodemailer")
