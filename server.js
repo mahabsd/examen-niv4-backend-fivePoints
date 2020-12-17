@@ -5,6 +5,7 @@ const port = 3000;
 var app =express();
 require('./db/mogoDB')
 //require('./routes/scheduledemailsApi')
+require('./authWithPassport/auth');
 const todoApi= require('./routes/todoApi');
 const usersApi = require('./routes/userApi')
 const mailApi = require("./routes/nodemailer")
