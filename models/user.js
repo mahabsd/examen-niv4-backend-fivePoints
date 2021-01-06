@@ -1,11 +1,13 @@
 const mongoose=require('mongoose');
-const todoApi= require('../routes/todoApi');
+const todoApi= require('../routes/sujetApi');
 var schema = mongoose.Schema;
 var userSchema = new schema({
+    firstName: { type: String },
+    lastName:    { type: String},
     email : {type : String, required: true, unique: true},
     password : {type : String, required: true, unique: true},
-    todos :   [{ type: mongoose.Schema.Types.ObjectId, ref: 'todoSchema' }],
-    image : {type : String}
+    sujets :   [{ type: mongoose.Schema.Types.ObjectId, ref: 'sujetSchema' }],
+    voteNumber : {type : Number}
 });
 
 module.exports = mongoose.model("user", userSchema)

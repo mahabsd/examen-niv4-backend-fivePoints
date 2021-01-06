@@ -3,7 +3,6 @@ const router = express.Router();
 const User = require("../models/user")
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
-const passport = require('passport');
 
 //add new user
 router.post('/user/add/', (req, res) => {
@@ -12,18 +11,12 @@ router.post('/user/add/', (req, res) => {
         user.password = hash;
         user.save().then(item => {
             res.status(200).json();
-            console.log("datea saved " + user.password);
+            console.log("data saved " + user.password);
         }).catch(err => {
             console.log(err);
         });
     });
-    res.send(req.body);
-    // user.save().then(function (){
-    //     res.json(user);
-    //     res.status(200).json();
-    //     User.findById
-    //     console.log(user);
-    // }).catch(err => res.status(400).json('Error: ' + err));
+    //res.send(req.body);
 
 });
 
@@ -35,7 +28,7 @@ router.get('/user/:id', ensureToken, (req, res) => {
             res.status(403)
 
         } else {
-            User.findById(req.params.id).populate('todos').exec().then(data => {
+            User.findById(req.params.id).populate('sujets').exec().then(data => {
                 res.status(200).json(data);
                 // res.send(data); la meme que json(data)
             }).catch(err => res.status(400).json('Error: ' + err));
@@ -82,24 +75,15 @@ router.put('/user/update/:id', ensureToken, (req, res) => {
   
 });
 //get All users
-router.get('/getAllusers', ensureToken, (req, res) => {
-    jwt.verify(req.token, process.env.JWT_KEY, (err) => {
-        if (err) {
-
-            res.status(403)
-
-        } else {
-            User.find().populate('todos').exec().then(function (users) {
-                res.send(users)
-                res.status(200).json();
-            }).catch(err => res.status(400).json('Error: ' + err));
-        }
-    });
-
+router.get('/getAllusers',  (req, res) => {
+    User.find().populate('sujets').exec().then(function (users) {
+        res.send(users)
+        res.status(200).json();
+    }).catch(err => res.status(400).json('Error: ' + err));
 
 });
-//affect todo for every user 
-router.put('/affectuserTask/:idUser/:idTodo',ensureToken, (req, res) => {
+//affect sujet for every user 
+router.put('/affectuserTask/:idUser/:idSujet',ensureToken, (req, res) => {
     console.log("bonj");
 
     jwt.verify(req.token, process.env.JWT_KEY, (err) => {
@@ -110,7 +94,7 @@ router.put('/affectuserTask/:idUser/:idTodo',ensureToken, (req, res) => {
         }else{
             User.findByIdAndUpdate(req.params.idUser, {
                 $push: {
-                    todos: req.params.idTodo
+                    sujets: req.params.idsujet
                 }
             }).then((user) => {
                 res.status(200).json(user);
@@ -123,19 +107,8 @@ router.put('/affectuserTask/:idUser/:idTodo',ensureToken, (req, res) => {
    
 });
 
-//affect todo for every user ancienne methode  :
-
-// router.put('/affectuserTask/:idUser/:idTodo', (req, res) => {
-//     User.findById(req.params.idUser).then((user) => {
-//             user.todos.push(req.params.idTodo)
-//             res.status(200).json(user);
-//             user.save();
-//             res.send(user)
-//     }).catch(err => res.status(400).json('Error: ' + err));
-// })
-
-//splice todo for every user 
-router.delete('/deleteuserTask/:idUser/:idTodo', ensureToken, (req, res) => {
+//splice sujet for every user 
+router.delete('/deleteuserTask/:idUser/:idsujet', ensureToken, (req, res) => {
     jwt.verify(req.token, process.env.JWT_KEY, (err) => {
         if (err) {
 
@@ -144,7 +117,7 @@ router.delete('/deleteuserTask/:idUser/:idTodo', ensureToken, (req, res) => {
         } else {
             User.findByIdAndUpdate(req.params.idUser, {
                 $pull: {
-                    todos: req.params.idTodo
+                    sujets: req.params.idsujet
                 }
             }).then((user) => {
                 res.status(200).json(user);
@@ -153,19 +126,6 @@ router.delete('/deleteuserTask/:idUser/:idTodo', ensureToken, (req, res) => {
     });
 
 });
-
-
-//delete todo for every user ancienne methode  :
-
-// router.delete('/deleteuserTask/:idUser/:idTodo', (req, res) => {
-//     User.findById(req.params.idUser).then((user) => {
-//         var index = user.todos.indexOf(req.params.idTodo)
-//             user.todos.splice(index, 1)
-//             res.status(200).json(user);
-//             user.save();
-//             res.send(user)
-//     }).catch(err => res.status(400).json('Error: ' + err));
-// })
 
 //login
 router.post('/user/login/', (req, res) => {
@@ -177,7 +137,6 @@ router.post('/user/login/', (req, res) => {
         if (!user) return res.status(400).json({
             msg: "User does not exist"
         })
-
         bcrypt.compare(req.body.password, user.password, (err, data) => {
             //if error than throw error
             if (err) throw err
@@ -188,9 +147,9 @@ router.post('/user/login/', (req, res) => {
                 return res.status(200).json({
                     user,
                     token: token,
-                    msg: "Login success"
                 })
-            } else {
+            }
+            else {
                 return res.status(401).json({
                     msg: "Invalid credencial "
                 })
@@ -217,47 +176,5 @@ function ensureToken(req, res, next) {
         res.sendStatus(401);
     }
 };
-
-
-
-// sign in with passport
-
-loginWithPassport=(req,res,next)=>{
-    return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
-      if(err) {
-        return next(err);
-      }
-  
-      if(passportUser) {
-        console.log(passportUser);
-        
-        const user = passportUser;
-                    const token = jwt.sign(
-                {
-                  email: passportUser.email,
-                  userId: passportUser._id
-                },
-                process.env.JWT_KEY,
-                {
-                    expiresIn: "1h"
-                }
-              );
-        user.token = token
-  
-    return res.status(200).json({
-        firstName: passportUser.firstName,
-        lastName: passportUser.lastName,
-        email: passportUser.email,
-        token : token
-                     });
-      }
-  
-      return res.status(400).json(info);
-    })(req, res, next);
-    
-  }
-
-
-  router.post('/loginWithPassport',loginWithPassport);
 
 module.exports = router;

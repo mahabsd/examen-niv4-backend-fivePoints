@@ -6,19 +6,15 @@ var app =express();
 require('./db/mogoDB')
 //require('./routes/scheduledemailsApi')
 require('./authWithPassport/auth');
-const todoApi= require('./routes/todoApi');
+const sujetApi= require('./routes/sujetApi');
 const usersApi = require('./routes/userApi')
-const mailApi = require("./routes/nodemailer")
-const multerApi = require("./routes/multerApi")
 
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
-app.use('/todos', todoApi);
+app.use('/sujets', sujetApi);
 app.use('/users', usersApi);
-app.use('/emails', mailApi);
-app.use('/multers', multerApi);
-app.use('/img', express.static('img'));
+
 
 
   
