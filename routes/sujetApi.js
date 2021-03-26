@@ -3,7 +3,7 @@ const router = express.Router();
 const Sujet = require("../models/sujetSchema")
 const jwt = require("jsonwebtoken");
 
-router.post('/sujet/add',  (req, res) => {
+router.post('/sujet/add', (req, res) => {
 
     var sujet = new Sujet(req.body);
     sujet.save().then(function () {
@@ -27,41 +27,24 @@ router.post('/sujet/add',  (req, res) => {
 });
 
 //get sujet by ID
-router.get('/sujet/:id', ensureToken, (req, res) => {
-    jwt.verify(req.token, process.env.JWT_KEY, (err) => {
-        if (err) {
-
-            res.status(403)
-
-        } else {
-
-            Sujet.findById(req.params.id).then(data => {
-                res.send(data);
-                res.status(200).json();
-            }).catch(err => res.status(400).json('Error: ' + err));
-        }
-    });
-
+router.get('/sujet/:id', (req, res) => {
+    Sujet.findById(req.params.id).then(data => {
+        //  res.send();
+        res.status(200).json(data);
+    }).catch(err => res.status(400).json('Error: ' + err));
 });
 
 //update sujet by ID
 router.put('/sujet/update/:id', (req, res) => {
 
-    Sujet.findByIdAndUpdate(req.params.id, req.body).then(function () {
+    // if (req.body.vote == true) {
+    //     Sujet.findByIdAndUpdate(req.params.id, { $inc: { 'voteTrue': 1} }).then(console.log('hi')).catch(err => res.status(400).json('Error: ' + err))
+    // } else {
+    //     Sujet.findByIdAndUpdate(req.params.id, { $inc: { 'voteFalse': 1} }).then(console.log('not')).catch(err => res.status(400).json('Error: ' + err))
+    // }
+    Sujet.findByIdAndUpdate(req.params.id, req.body).then(sujet => {
         res.status(200).json(req.body);
     }).catch(err => res.status(400).json('Error: ' + err));
-    // jwt.verify(req.token, process.env.JWT_KEY, (err) => {
-    //     if (err) {
-
-    //         res.status(403)
-
-    //     } else {
-    //         Sujet.findByIdAndUpdate(req.params.id, req.body).then(function () {
-    //             res.send(req.body);
-    //             res.status(200).json();
-    //         }).catch(err => res.status(400).json('Error: ' + err));
-    //     }
-    // });
 
 })
 
@@ -130,13 +113,13 @@ router.put('/affectusersujet/:idUser/:idSujet', (req, res) => {
     //             }
     //         }).then((user) => {
     //             res.status(200).json(user);
-        
+
     //         }).catch(err => res.status(400).json('Error: ' + err));
     //     }
 
     //});
-    
-   
+
+
 });
 
 //authentification

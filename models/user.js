@@ -7,7 +7,7 @@ var userSchema = new schema({
     email : {type : String, required: true, unique: true},
     password : {type : String, required: true, unique: true},
     sujets :   [{ type: mongoose.Schema.Types.ObjectId, ref: 'sujetSchema' }],
-    voteNumber : {type : Number}
+    voteNumber : {type : Number, default : 5}
 });
 
 module.exports = mongoose.model("user", userSchema)

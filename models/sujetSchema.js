@@ -9,7 +9,9 @@ var sujetSchema = new schema({
     description: {
         type: String
     },
-    vote : false,
+    vote : {type : Boolean},
+    voteTrue : {type : Number, default: 0},
+    voteFalse : {type : Number, default: 0},
     userId : {
         type: String
     },

@@ -21,19 +21,11 @@ router.post('/user/add/', (req, res) => {
 });
 
 //get by Id
-router.get('/user/:id', ensureToken, (req, res) => {
-    jwt.verify(req.token, process.env.JWT_KEY, (err) => {
-        if (err) {
-
-            res.status(403)
-
-        } else {
-            User.findById(req.params.id).populate('sujets').exec().then(data => {
-                res.status(200).json(data);
-                // res.send(data); la meme que json(data)
-            }).catch(err => res.status(400).json('Error: ' + err));
-        }
-    });
+router.get('/user/:id', (req, res) => {
+    User.findById(req.params.id).populate('sujets').exec().then(data => {
+        res.status(200).json(data);
+        // res.send(data); la meme que json(data)
+    }).catch(err => res.status(400).json('Error: ' + err));
 });
 //delete by Id
 router.delete('/user/delete/:id', ensureToken, (req, res) => {
@@ -56,22 +48,14 @@ router.delete('/user/delete/:id', ensureToken, (req, res) => {
 });
 
 //update by Id
-router.put('/user/update/:id', ensureToken, (req, res) => {
+router.put('/user/update/:id', (req, res) => {
 
-    jwt.verify(req.token, process.env.JWT_KEY, (err) => {
-        if (err) {
-
-            res.status(403)
-
-        } else {
-  User.findByIdAndUpdate(req.params.id, req.body).then(function (user) {
+    User.findByIdAndUpdate(req.params.id, req.body).then(function (user) {
         res.status(200).json(
              req.body,
         );
         // res.send();
     }).catch(err => res.status(400).json('Error: ' + err));
-        }
-    });
   
 });
 //get All users
@@ -176,5 +160,6 @@ function ensureToken(req, res, next) {
         res.sendStatus(401);
     }
 };
+
 
 module.exports = router;
